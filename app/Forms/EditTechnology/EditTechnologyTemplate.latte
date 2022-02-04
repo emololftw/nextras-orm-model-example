@@ -1,0 +1,100 @@
+{control form}
+{*
+{form form}
+	{foreach $form->getControls() as $input}
+
+		{continueIf $input->getOption(type) === button || ($input->getOption(rendered) && $input->getOption(type) !== hidden)}
+
+		<div n:class="row, g-0, align-items-center, py-3, !$iterator->first ? border-top">
+
+			{if $input->getOption(type) === checkbox}
+
+				<div class="col-8">
+					<div class="d-flex flex-column">
+						<label class="fs-6">
+							{dump $input}
+							{$input->getCaption()|translate}
+						</label>
+
+						<small class="text-secondary-2" n:ifcontent>
+							{$input->getOption(description)|translate}
+						</small>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-check form-switch form-switch-md">
+						<input class="form-check-input" n:name=$input:>
+					</div>
+				</div>
+			{elseif $input->getName() === manipulation_custom_selector}
+
+				<div class="col-8">
+					<div class="d-flex flex-column">
+						{label $input, class => 'fs-6'}
+						<small class="text-secondary-2" n:ifcontent>
+							{$input->getOption(description)|translate}
+						</small>
+					</div>
+				</div>
+				<div class="col-4">
+
+					<div class="row">
+
+						<div class="mb-3">
+							{input manipulation_custom_selector}
+						</div>
+
+						<div class="col-auto" id="{$form[manipulation_type]->getOption(id)}">
+							{input manipulation_type}
+						</div>
+
+						<div class="col-auto" id="{$form[manipulation_sign]->getOption(id)}">
+							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+								{foreach $form[manipulation_sign]->items as $key => $label}
+									<input type="radio" class="btn-check" n:name=manipulation_sign:$key>
+									<label class="btn btn-outline-primary" n:name=manipulation_sign:$key>{_$label}</label>
+								{/foreach}
+							</div>
+						</div>
+
+						<div class="col" id="{$form[manipulation]->getOption(id)}">
+							<div class="input-group">
+								{input manipulation}
+								<span class="input-group-text" n:ifcontent>{$form[manipulation]->getOption(unit)|translate}</span>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="invalid-feedback" n:ifcontent>
+						{inputError manipulation}
+					</div>
+				</div>
+
+			{else}
+				<div n:class="$input->getName() === mode ? col-6 : col-8">
+					<div class="d-flex flex-column">
+						{label $input, class => 'fs-6'}
+						<small class="text-secondary-2" n:ifcontent>
+							{$input->getOption(description)|translate}
+						</small>
+					</div>
+				</div>
+				<div n:class="$input->getName() === mode ? col-6 : col-4">
+					<div class=" input-group" id="{$input->getOption(id)}">
+						{input $input}
+						<span class="input-group-text" n:ifcontent>{$input->getOption(unit)|translate}</span>
+
+						<div class="invalid-feedback" n:ifcontent>
+							{inputError $input}
+						</div>
+					</div>
+				</div>
+
+			{/if}
+		</div>
+	{/foreach}
+
+	{input $form[send]}
+{/form}
+*}
